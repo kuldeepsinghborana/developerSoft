@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonServiceService } from '../../common/common-service.service';
 
 @Component({
   selector: 'app-employee-management',
@@ -6,8 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./employee-management.component.css']
 })
 export class EmployeeManagementComponent implements OnInit {
-
-  constructor() { }
+public employersList : object = {};
+  constructor(private commonServiceService: CommonServiceService) {
+    this.commonServiceService.get('admin/employers')
+    .subscribe(res =>{
+      this.employersList = res.employers;
+      console.log(res)
+    });
+  }
 
   ngOnInit() {
   }

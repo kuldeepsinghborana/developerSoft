@@ -206,21 +206,32 @@ module.exports.employersList = function (req, res, next) {
   date_created && filters.push({ createdAt: date_created });
   last_activity && filters.push({ updatedAt: last_activity });
 
-  res.locals.searchQuery = search_query;
-  _searchAndSortEmployers(search_query, filters, function (err, employers) {
-    if (err) {
-      console.log(err);
-      res.redirect('/admin')
-    }
-    var tmpEmployersList = employers;
-    res.locals.employersCount = employers.length;
-    res.locals.employerFilters = filters;
-    res.status(200).render('admin/employersList', {
-      title: 'Jobbunny | Admin > Employers',
-      employers: employers,
-      moment: moment
-    });
-  });
+  // res.locals.searchQuery = search_query;
+ return  _searchAndSortEmployers(search_query, filters).then((employers)=>{
+    return res.json({
+      employers : employers
+    })
+  }).catch(err => {
+    res.status(400).json({
+      message : 'Something went wrong'
+    })
+  })
+  // _searchAndSortEmployers(search_query, filters, function (err, employers) {
+  //   if (err) {
+  //     console.log(err);
+  //     res.redirect('/admin')
+  //   }
+  //   var tmpEmployersList = employers;
+  //   res.locals.employersCount = employers.length;
+  //   res.locals.employerFilters = filters;
+
+
+    // res.status(200).render('admin/employersList', {
+    //   title: 'Jobbunny | Admin > Employers',
+    //   employers: employers,
+    //   moment: moment
+    // });
+  // });
 };
 
 // GET /admin/employers/search
